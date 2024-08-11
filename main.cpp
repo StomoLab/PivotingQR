@@ -37,22 +37,13 @@ int main() {
         }
     }
 
-    /*
-    for( int i=0; i<M; ++i){
-        for(int j=0; j<N; ++j){
-            std::cout << A[i + M*j] << ',';
-        }
-        std::cout << std::endl;
-    }
-*/
-
     auto jpiv = new int[N];
 
     auto work = new double[3*N];
     auto tau = new double[N];
 
-    for(int i=0; i<N; ++i){
-        jpiv[i] = i;
+    for(int j=0; j<N; ++j){
+        jpiv[j] = j;
     }
 
     for(int i=0; i<N; ++i){
@@ -65,14 +56,10 @@ int main() {
 
         int pvt = i + cblas_idamax( N-i, &work[i], 1);
 
+        //ピボット
         if( pvt != i ) {
             cblas_dswap(M, &A[0 + M * pvt], 1, &A[0 + M * i], 1);
-            //A2 もスワップ
-            cblas_dswap(M, &A2[0 + M * pvt], 1, &A2[0 + M * i], 1);
-
-            int itemp = jpiv[pvt];
-            jpiv[pvt] = jpiv[i];
-            jpiv[i] = itemp;
+            std::swap(jpiv[pvt], jpiv[i]);
             work[pvt] = work[i];
             work[N + pvt] = work[N + i];
         }
@@ -91,7 +78,22 @@ int main() {
             //std::cout << "LARFT:" << i << std::endl;
         }
     }
+    //QR分解終了
 
+    // A2 = AP を作成
+    auto jpiv2 = new int[N];
+    for(int j=0; j<N;++j){
+        jpiv2[j] = j;
+    }
+
+    for(int j=0; j<N; ++j){
+        for(int jj=0; jj<N; ++jj){
+            if(jpiv[j] == jpiv2[jj]){
+                cblas_dswap(M, &A2[0 + M * j], 1, &A2[0 + M * jj], 1);
+                std::swap(jpiv2[j],jpiv2[jj]);
+            }
+        }
+    }
 
     //Q行列作成
     for(int j = N-1; j>=0; --j){
@@ -156,6 +158,8 @@ int main() {
     delete[] work;
     delete[] tau;
 
+    delete [] jpiv2;
     delete [] Q;
+    delete [] I;
     return 0;
 }
