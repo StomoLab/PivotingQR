@@ -46,8 +46,9 @@ int main() {
         jpiv[j] = j;
     }
 
-    for(int i=0; i<N; ++i){
-        work[i] = cblas_dnrm2( M-i, &A[i + M*i], 1);
+    for(int j=0; j<N; ++j){
+        work[j] = cblas_dnrm2( M, &A[0 + M*j], 1);
+        work[N+j] = work[j];
     }
 
     for(int i=0; i<std::min(M,N); ++i){
@@ -66,7 +67,7 @@ int main() {
 
         if (i < M) {
             //ハウスホルダーを作る
-            LAPACKE_dlarfg( (M - i), &A[i + M * i], &A[i + 1 + M * i], one, &tau[i]);
+            LAPACKE_dlarfg( (M-i), &A[i + M*i], &A[i+1 + M*i], one, &tau[i]);
             //std::cout << "LARFG:" << i << std::endl;
         }
         if( i < (N-1)) {
@@ -77,8 +78,26 @@ int main() {
             A[i + M*i] = aii;
             //std::cout << "LARFT:" << i << std::endl;
         }
+
+        //更新後のノルム更新
+        for(int j=i+1; j<N; ++j){
+            work[j] = cblas_dnrm2( M-(i+1), &A[(i+1) + (M*j)], 1);
+        }
     }
     //QR分解終了
+    /* LAPACKルーチンとの確認用
+    auto jpiv2 = new int[N];
+    for(int j=0; j<N;++j){
+        jpiv2[j] = 0;
+    }
+
+    LAPACKE_dgeqpf(LAPACK_COL_MAJOR, M, N, A2, M, jpiv2, tau);
+    for( int i=0; i<M; ++i){
+        if( A[i+M*i] != A2[i+M*i]) {
+            std::cout << A[i + M * i] << "," << A2[i + M * i] << std::endl;
+        }
+    }
+     */
 
     // A2 = AP を作成
     auto jpiv2 = new int[N];
