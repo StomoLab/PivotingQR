@@ -48,7 +48,7 @@ jobs:
     - name: install
       run: |
         sudo sh ./intel-oneapi-base-toolkit-2025.0.1.46_offline.sh -a --silent --cli --eula accept
-        . /opt/intel/oneapi/2025.0/oneapi-vars.sh
+        source /opt/intel/oneapi/2025.0/oneapi-vars.sh
     
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
