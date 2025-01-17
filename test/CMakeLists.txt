@@ -15,9 +15,5 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-set(gtest_exec ${PROJECT_NAME}_gtest)
-add_executable(${gtest_exec} test.cpp)
-target_link_libraries(${gtest_exec} PUBLIC gtest_main matrix)
-
-add_test(NAME test COMMAND ${gtest_exec})
+add_test(NAME test COMMAND QR_test)
 enable_testing()
