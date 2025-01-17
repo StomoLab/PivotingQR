@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 list(APPEND CMAKE_PREFIX_PATH "/opt/OpenBLAS")
 
 find_library(OpenBLAS_LIBRARY
-        NAMES openblas_seq
+        NAMES openblas
         PATHS /opt/OpenBLAS
         NO_SYSTEM_ENVIRONMENT_PATH)
 
