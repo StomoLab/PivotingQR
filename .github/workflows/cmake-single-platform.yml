@@ -43,7 +43,7 @@ jobs:
           echo "File exists. Exiting..."
           exit 0
         fi
-        wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/dfc4a434-838c-4450-a6fe-2fa903b75aa7/intel-oneapi-base-toolkit-2025.0.1.46_offline.sh
+        wget -P ${GITHUB_WORKSPACE} https://registrationcenter-download.intel.com/akdlm/IRC_NAS/dfc4a434-838c-4450-a6fe-2fa903b75aa7/intel-oneapi-base-toolkit-2025.0.1.46_offline.sh
 
     - name: install
       run: |
