@@ -2,8 +2,8 @@
 #include <iostream>
 #include <random>
 #include <format>
-#include "cblas.h"
-#include "lapacke.h"
+#include "mkl_cblas.h"
+#include "mkl_lapacke.h"
 
 void pivoting_QR(double* A, const int M, const int N)
 {
@@ -30,7 +30,7 @@ void pivoting_QR(double* A, const int M, const int N)
 
     auto dgeqpf_start = std::chrono::high_resolution_clock::now();
 
-    auto jpiv = new int[N];
+    auto jpiv = new long long int[N];
     auto work = new double[3*N];
     auto tau = new double[N];
 
@@ -177,7 +177,7 @@ int main() {
 
 
 
-    auto jpiv = new int[N];
+    auto jpiv = new long long int[N];
 
     auto work = new double[3*N];
     auto tau = new double[N];
