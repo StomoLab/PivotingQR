@@ -32,7 +32,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/cache@v4
       with:
-        key: oneapi-${{ runner.os }}-${{ hashFiles(format('{0}/intel-oneapi-base-toolkit-2025.0.1.46_offline.sh', github.workspace)) }}
+        key: oneapi-${{ runner.os }}
         path: ${{ github.workspace }}/intel-oneapi-base-toolkit-2025.0.1.46_offline.sh
         restore-keys: |
           test-${{ runner.os }}-

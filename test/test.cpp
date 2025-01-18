@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include <format>
+#include "gtest/gtest.h"
 #include "mkl_cblas.h"
 #include "mkl_lapacke.h"
 
@@ -30,7 +31,7 @@ void pivoting_QR(double* A, const int M, const int N)
 
     auto dgeqpf_start = std::chrono::high_resolution_clock::now();
 
-    auto jpiv = new long long int[N];
+    auto jpiv = new lapack_int[N];
     auto work = new double[3*N];
     auto tau = new double[N];
 
@@ -129,8 +130,8 @@ void pivoting_QR(double* A, const int M, const int N)
     // Q*R - A2(ピボット済み)
     cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans, M, N, M, one, &Q[0], M, &A[0], M, -one, &A2[0], M);
 
-    auto inorm = cblas_dnrm2( M*N, &I[0], 1);
-    auto dnorm = cblas_dnrm2( M*N, &A2[0], 1);
+    auto inorm = cblas_dnrm2( M*N, I, 1);
+    auto dnorm = cblas_dnrm2( M*N, A2, 1);
 
     std::cout << "直交性:" << inorm << std::endl;
     std::cout << "残差:" << dnorm << std::endl;
@@ -145,7 +146,7 @@ void pivoting_QR(double* A, const int M, const int N)
     delete [] I;
 }
 
-int main() {
+TEST(test_pivotingQR, norm) {
     int M  {1024};
     int N  {1024};
     int nb {64};
@@ -280,6 +281,7 @@ int main() {
     std::cout << "直交性:" << inorm << std::endl;
     std::cout << "残差:" << dnorm << std::endl;
 
+    EXPECT_TRUE( dnorm < 1e-10 );
 
 
     delete[] A1;
@@ -292,5 +294,4 @@ int main() {
     delete [] jpiv2;
     delete [] Q;
     delete [] I;
-    return 0;
 }
