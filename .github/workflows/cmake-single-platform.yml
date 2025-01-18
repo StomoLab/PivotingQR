@@ -33,34 +33,34 @@ jobs:
     - uses: actions/cache@v4
       with:
         key: oneapi-${{ runner.os }}
-        path: ${{ github.workspace }}/intel-oneapi-base-toolkit-2025.0.1.46_offline.sh
+        path: ${{ github.workspace }}/intel-onemkl-2025.0.0.940_offline.sh
         restore-keys: |
           test-${{ runner.os }}-
 
     - name: Check for file existence
       run: |
-        if [[ -f "${GITHUB_WORKSPACE}/intel-oneapi-base-toolkit-2025.0.1.46_offline.sh" ]]; then
+        if [[ -f "${GITHUB_WORKSPACE}/intel-onemkl-2025.0.0.940_offline.sh" ]]; then
           echo "File exists. Exiting..."
           exit 0
         fi
-        wget -P ${GITHUB_WORKSPACE} https://registrationcenter-download.intel.com/akdlm/IRC_NAS/dfc4a434-838c-4450-a6fe-2fa903b75aa7/intel-oneapi-base-toolkit-2025.0.1.46_offline.sh
+        wget -P ${GITHUB_WORKSPACE} https://registrationcenter-download.intel.com/akdlm/IRC_NAS/79153e0f-74d7-45af-b8c2-258941adf58a/intel-onemkl-2025.0.0.940_offline.sh
 
     - name: install
       run: |
-        sudo sh ./intel-oneapi-base-toolkit-2025.0.1.46_offline.sh -a --silent --cli --eula accept
-        source /opt/intel/oneapi/2025.0/oneapi-vars.sh
+        sudo sh ./intel-onemkl-2025.0.0.940_offline.sh -a --silent --cli --eula accept
+        source /opt/intel/oneapi/setvars.sh
     
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
-        source /opt/intel/oneapi/2025.0/oneapi-vars.sh
+        source /opt/intel/oneapi/setvars.sh
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
       # Build your program with the given configuration
       run: |
-        source /opt/intel/oneapi/2025.0/oneapi-vars.sh
+        source /opt/intel/oneapi/setvars.sh
         cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
@@ -68,6 +68,6 @@ jobs:
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: |
-        source /opt/intel/oneapi/2025.0/oneapi-vars.sh
+        source /opt/intel/oneapi/setvars.sh
         ctest -C ${{env.BUILD_TYPE}}
 
