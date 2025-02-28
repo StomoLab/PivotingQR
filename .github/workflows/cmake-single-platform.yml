@@ -25,7 +25,7 @@ jobs:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 10
 
     steps:
@@ -37,19 +37,19 @@ jobs:
         restore-keys: |
           test-${{ runner.os }}-
 
-    - name: Check for file existence
-      run: |
-        if [[ -f "${GITHUB_WORKSPACE}/intel-onemkl-2025.0.0.940_offline.sh" ]]; then
-          echo "File exists. Exiting..."
-          exit 0
-        fi
-        wget -P ${GITHUB_WORKSPACE} https://registrationcenter-download.intel.com/akdlm/IRC_NAS/79153e0f-74d7-45af-b8c2-258941adf58a/intel-onemkl-2025.0.0.940_offline.sh
-
-    - name: install
-      run: |
-        sudo sh ./intel-onemkl-2025.0.0.940_offline.sh -a --silent --cli --eula accept
-        source /opt/intel/oneapi/setvars.sh
-    
+#    - name: Check for file existence
+#      run: |
+#        if [[ -f "${GITHUB_WORKSPACE}/intel-onemkl-2025.0.0.940_offline.sh" ]]; then
+#          echo "File exists. Exiting..."
+#          exit 0
+#        fi
+#        wget -P ${GITHUB_WORKSPACE} https://registrationcenter-download.intel.com/akdlm/IRC_NAS/79153e0f-74d7-45af-b8c2-258941adf58a/intel-onemkl-2025.0.0.940_offline.sh
+#
+#    - name: install
+#      run: |
+#        sudo sh ./intel-onemkl-2025.0.0.940_offline.sh -a --silent --cli --eula accept
+#        source /opt/intel/oneapi/setvars.sh
+#
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
